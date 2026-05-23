@@ -1,8 +1,9 @@
+import { API_URL } from "@/config/api";
 import { useReplyManager } from "@/hooks/useReply";
 import { timeAgo } from "@/pages/Home";
 import { ArrowLeft, Heart, ImagePlus, MessageCircle, X } from "lucide-react";
 
-const BASE_URL = "http://localhost:3000/uploads";
+const BASE_URL = `${API_URL}/uploads`;
 const AVATAR_COLORS = [
   "#6366f1",
   "#e879f9",
