@@ -1,0 +1,67 @@
+import { Link } from "react-router-dom";
+import { useLoginManager } from "@/hooks/useAuth";
+
+function Login () {
+    const { handleChange, handleSubmit, form } = useLoginManager()
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-[#121212]">
+            <div className="w-[350px] bg-[#1e1e1e] p-8 rounded-xl shadow-lg text-white">
+            
+            {/* Logo */}
+            <h1 className="text-green-500 text-2xl font-bold mb-2">
+                waduh
+            </h1>
+
+            {/* Title */}
+            <h2 className="text-lg mb-6">
+                Login to <span className="text-green-500 font-bold">waduh</span>
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+                
+                {/* Email */}
+                <input
+                type="text"
+                name="email"
+                placeholder="Email *"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-md bg-transparent border border-gray-700 focus:outline-none focus:border-green-500"
+                />
+
+                {/* Password */}
+                <input
+                type="password"
+                name="password"
+                placeholder="Password *"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-md bg-transparent border border-gray-700 focus:outline-none focus:border-green-500"
+                />
+
+                {/* Button */}
+                <button
+                type="submit"
+                className="w-full py-3 bg-green-500 hover:bg-green-600 rounded-full font-semibold transition cursor-pointer"
+                >
+                Login
+                </button>
+            </form>
+
+            {/* Register */}
+            <p className="mt-4 text-xs text-gray-400 text-center">
+                Don't have an account yet?{" "}
+                <Link to="/register">
+                <span className="text-green-500 cursor-pointer font-bold hover:underline">
+                Create account
+                </span>
+                </Link>
+            </p>
+
+            </div>
+        </div>
+    );
+}
+
+export default Login
