@@ -112,7 +112,6 @@ export const useRegisterManager = () => {
 export const useUpdateManager = () => {
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.auth.token);
-  const user = useSelector((state: RootState) => state.auth.user);
 
   const handleUpdate = async (e: React.FormEvent, onSuccess: () => void) => {
     e.preventDefault();

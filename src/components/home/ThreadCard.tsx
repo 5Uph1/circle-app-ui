@@ -6,7 +6,7 @@ interface ThreadProps {
   id: number;
   content: string;
   image?: string;
-  created_at: string;
+  created_at?: string;
   user: {
     name: string;
     username: string;
@@ -37,7 +37,7 @@ export function ThreadCard({
         <div className="flex items-center gap-2">
           <span className="font-bold text-sm">{user.name}</span>
           <span className="text-gray-500 text-xs">
-            @{user.username} • {timeAgo(created_at)}
+            @{user.username} • {created_at ? timeAgo(created_at) : "-"}
           </span>
         </div>
         <p className="text-sm text-gray-200 leading-relaxed">{content}</p>

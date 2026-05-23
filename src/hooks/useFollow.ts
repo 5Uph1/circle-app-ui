@@ -16,7 +16,6 @@ import { socket } from "@/lib/socket";
 export const useFollow = (currentUserId: number, profileUserId: number) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.auth.token);
-  const user = useSelector((state: RootState) => state.auth.user);
 
   const {
     followers,
