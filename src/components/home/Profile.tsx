@@ -5,7 +5,6 @@ import { DialogDemo } from "../part/dialogProfile";
 import { useUpdateManager } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { API_URL } from "@/config/api";
 import { useFollow } from "@/hooks/useFollow";
 
 export function ProfileContent() {
