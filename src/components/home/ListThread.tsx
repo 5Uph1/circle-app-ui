@@ -6,6 +6,7 @@ interface Thread {
   content: string;
   image?: string;
   user: {
+    id: number;
     name: string;
     username: string;
     profile_picture: string;
