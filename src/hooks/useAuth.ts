@@ -122,9 +122,13 @@ export const useUpdateManager = () => {
     const fullname = (form.elements.namedItem("fullname") as HTMLInputElement)
       ?.value;
     const bio = (form.elements.namedItem("bio") as HTMLInputElement)?.value;
+    const photoFile = (
+      form.elements.namedItem("photo_profile") as HTMLInputElement
+    )?.files?.[0];
 
     if (fullname) formData.append("full_name", fullname);
     if (bio) formData.append("bio", bio);
+    if (photoFile) formData.append("photo_profile", photoFile);
 
     try {
       const res = await fetch(`${API_URL}/user/edit`, {

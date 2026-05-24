@@ -152,6 +152,7 @@ export function Home() {
                   fullname={user?.fullname ?? null}
                   username={user?.username ?? null}
                   bio={user?.bio ?? null}
+                  photo_profile={user?.photo_profile ?? null}
                   onSubmit={handleUpdate}
                 />
               </div>
