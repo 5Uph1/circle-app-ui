@@ -1,6 +1,6 @@
 import { timeAgo } from "@/pages/Home";
 import { Heart, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface ThreadProps {
   id: number;
@@ -8,6 +8,7 @@ interface ThreadProps {
   image?: string;
   created_at?: string;
   user: {
+    id: number;
     name: string;
     username: string;
     profile_picture: string;
@@ -29,13 +30,19 @@ export function ThreadCard({
   replies,
   onLike,
 }: ThreadProps) {
+  const navigate = useNavigate();
   return (
-    <div className="p-4 border-b border-gray-800 flex gap-3 hover:bg-[#222] transition cursor-pointer">
+    <div className="p-4 border-b border-gray-800 flex gap-3 hover:bg-[#222] transition">
       {/* Avatar */}
       <div className="w-10 h-10 rounded-full bg-blue-500 flex-shrink-0"></div>
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-sm">{user.name}</span>
+          <span
+            onClick={() => navigate(`/profile/${user.id}`)}
+            className="font-bold text-sm cursor-pointer cursor-pointer"
+          >
+            {user.name}
+          </span>
           <span className="text-gray-500 text-xs">
             @{user.username} • {created_at ? timeAgo(created_at) : "-"}
           </span>
