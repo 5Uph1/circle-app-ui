@@ -1,9 +1,7 @@
-import { API_URL } from "@/config/api";
 import { useReplyManager } from "@/hooks/useReply";
 import { timeAgo } from "@/pages/Home";
 import { ArrowLeft, Heart, ImagePlus, MessageCircle, X } from "lucide-react";
 
-const BASE_URL = `${API_URL}/uploads`;
 const AVATAR_COLORS = [
   "#6366f1",
   "#e879f9",
@@ -68,12 +66,7 @@ function SkeletonReply() {
 
 // ─── Reply Card ───────────────────────────────────────────────────────────────
 function ReplyCard({ reply, index }: { reply: any; index: number }) {
-  const isUrl = reply.user?.profile_picture?.startsWith("http");
-  const avatarSrc = reply.user?.profile_picture
-    ? isUrl
-      ? reply.user.profile_picture
-      : `${BASE_URL}/${reply.user.profile_picture}`
-    : undefined;
+  const avatarSrc = reply.user?.profile_picture ?? undefined;
 
   return (
     <div className="flex gap-3 px-4 py-3 border-b border-[#2f3336]">
@@ -100,7 +93,7 @@ function ReplyCard({ reply, index }: { reply: any; index: number }) {
 
         {reply.image && (
           <img
-            src={`${BASE_URL}/${reply.image}`}
+            src={reply.image}
             alt="attachment"
             className="rounded-xl max-h-72 object-cover w-full mb-2"
           />
@@ -125,11 +118,7 @@ export function Replies() {
     onSubmitReply,
   } = useReplyManager();
 
-  const threadAvatarSrc = thread?.user?.profile_picture
-    ? thread.user.profile_picture.startsWith("http")
-      ? thread.user.profile_picture
-      : `${BASE_URL}/${thread.user.profile_picture}`
-    : undefined;
+  const threadAvatarSrc = thread?.user?.profile_picture ?? undefined;
 
   return (
     <main className="flex-1 border-x border-[#2f3336] min-h-screen">
@@ -169,7 +158,7 @@ export function Replies() {
           {/* ✅ Image thread jika ada */}
           {thread.image && (
             <img
-              src={`${BASE_URL}/${thread.image}`}
+              src={thread.image}
               alt="thread attachment"
               className="rounded-xl w-full object-cover max-h-80 mb-3 border border-[#2f3336]"
             />

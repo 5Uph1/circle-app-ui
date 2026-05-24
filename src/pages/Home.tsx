@@ -12,7 +12,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
 import { getSuggestedUsers } from "@/store/userSlice";
-import { API_URL } from "@/config/api";
 import { DialogDemo } from "@/components/part/dialogProfile";
 import { useUpdateManager } from "@/hooks/useAuth";
 import { useFollow } from "@/hooks/useFollow";
@@ -199,7 +198,7 @@ export function Home() {
                       <div className="w-10 h-10 bg-red-600 rounded-full overflow-hidden">
                         {u.photo_profile && (
                           <img
-                            src={`${API_URL}/uploads/${u.photo_profile}`}
+                            src={u.photo_profile}
                             className="w-full h-full object-cover"
                           />
                         )}

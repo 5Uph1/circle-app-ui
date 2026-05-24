@@ -179,7 +179,7 @@ export function ProfileContent() {
             {filteredThreads.map((t) => (
               <img
                 key={t.id}
-                src={`${API_URL}/uploads/${t.image}`}
+                src={t.image}
                 className="w-full h-32 object-cover"
               />
             ))}

@@ -50,7 +50,7 @@ export function ThreadCard({
         <p className="text-sm text-gray-200 leading-relaxed">{content}</p>
         {image && (
           <img
-            src={`http://localhost:3000/uploads/${image}`}
+            src={image}
             className="mt-3 rounded-xl border border-gray-700 w-full object-cover max-h-80"
           />
         )}
