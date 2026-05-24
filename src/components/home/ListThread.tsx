@@ -1,4 +1,4 @@
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
 import { ThreadCard } from "./ThreadCard";
 
 interface Thread {
@@ -106,7 +106,26 @@ export function ListThread({
           {/* Preview Nama File Image */}
           {image && (
             <div className="w-full mt-3">
-              <div className="flex items-center gap-2 bg-gray-800 px-3 py-1 rounded w-fit">
+              {/* Desktop: tampilkan preview gambar */}
+              <div className="hidden md:block relative">
+                <img
+                  src={URL.createObjectURL(image)}
+                  className="rounded-xl max-h-60 object-cover border border-gray-700"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setImage(null);
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                  }}
+                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1 hover:bg-black/80"
+                >
+                  <X size={14} className="text-white" />
+                </button>
+              </div>
+
+              {/* Mobile: tetap nama file seperti sebelumnya */}
+              <div className="flex md:hidden items-center gap-2 bg-gray-800 px-3 py-1 rounded w-fit">
                 <span>🖼️</span>
                 <span className="text-sm text-gray-300">{image.name}</span>
                 <button
