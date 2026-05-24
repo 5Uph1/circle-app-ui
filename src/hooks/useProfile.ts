@@ -24,7 +24,7 @@ interface ProfileThread {
   content: string;
   image?: string;
   user: {
-    userId: number;
+    id: number;
     name: string;
     username: string;
     profile_picture: string;
