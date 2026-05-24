@@ -34,7 +34,18 @@ export function ThreadCard({
   return (
     <div className="p-4 border-b border-gray-800 flex gap-3 hover:bg-[#222] transition">
       {/* Avatar */}
-      <div className="w-10 h-10 rounded-full bg-blue-500 flex-shrink-0"></div>
+      <div className="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden bg-[#3a3a3a] flex items-center justify-center">
+        {user?.profile_picture ? (
+          <img
+            src={user.profile_picture}
+            className="w-full h-full object-cover rounded-full"
+          />
+        ) : (
+          <span className="text-white text-sm font-bold">
+            {user.name?.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
           <span

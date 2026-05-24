@@ -58,7 +58,18 @@ export function ProfileContent() {
       {/* BANNER */}
       <div className="h-32 bg-gradient-to-r from-green-300 to-yellow-300 relative">
         <div className="absolute -bottom-12 left-4">
-          <div className="w-20 h-20 rounded-full border-4 border-black bg-yellow-500" />
+          <div className="w-20 h-20 rounded-full border-4 border-black bg-yellow-500 overflow-hidden">
+            {displayUser?.photo_profile && (
+              <img
+                src={
+                  isOwnProfile
+                    ? (user?.photo_profile ?? "")
+                    : (profileUser?.photo_profile ?? "")
+                }
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
         </div>
       </div>
 

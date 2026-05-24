@@ -18,6 +18,7 @@ interface Thread {
 }
 
 interface ListThreadProps {
+  photo_profile: string;
   onSubmit: (e: React.FormEvent) => void;
   content: string;
   setContent: (value: string) => void;
@@ -29,6 +30,7 @@ interface ListThreadProps {
 }
 
 export function ListThread({
+  photo_profile,
   onSubmit,
   content,
   setContent,
@@ -48,7 +50,16 @@ export function ListThread({
       <form onSubmit={onSubmit}>
         <div className="p-4 border-b border-gray-800 flex flex-col items-center">
           <div className="flex gap-4 items-center w-full h-full">
-            <div className="w-10 h-10 rounded-full bg-yellow-500 flex-shrink-0"></div>
+            <div className="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden bg-[#3a3a3a] flex items-center justify-center">
+              {photo_profile ? (
+                <img
+                  src={photo_profile}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <span className="text-white text-sm font-bold">?</span>
+              )}
+            </div>
             <input
               type="text"
               placeholder="What is happening?!"

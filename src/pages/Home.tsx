@@ -108,6 +108,7 @@ export function Home() {
               path="/"
               element={
                 <ListThread
+                  photo_profile={user?.photo_profile || ""}
                   onSubmit={onSubmit}
                   content={content}
                   setContent={setContent}
@@ -145,7 +146,14 @@ export function Home() {
             <h2 className="font-bold mb-3">My Profile</h2>
             <div className="relative mb-12">
               <div className="h-16 bg-gradient-to-r from-green-200 to-blue-300 rounded-lg" />
-              <div className="w-16 h-16 rounded-full border-4 border-[#262626] absolute -bottom-12 left-1 bg-yellow-500" />
+              <div className="w-16 h-16 rounded-full border-4 border-[#262626] absolute -bottom-12 left-1 bg-yellow-500 overflow-hidden">
+                {user?.photo_profile && (
+                  <img
+                    src={user.photo_profile}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
               <div className="absolute -bottom-10 right-0">
                 <DialogDemo
                   userId={user?.id ?? null}
