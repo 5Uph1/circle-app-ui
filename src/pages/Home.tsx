@@ -34,6 +34,7 @@ export function Home() {
     threads,
     image,
     fileInputRef,
+    isPosting,
     setContent,
     setImage,
     handleLike,
@@ -109,6 +110,7 @@ export function Home() {
               element={
                 <ListThread
                   photo_profile={user?.photo_profile || ""}
+                  isPosting={isPosting}
                   onSubmit={onSubmit}
                   content={content}
                   setContent={setContent}

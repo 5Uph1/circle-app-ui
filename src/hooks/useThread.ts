@@ -28,6 +28,7 @@ export const useThreadManager = () => {
 
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [isPosting, setIsPosting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -92,13 +93,16 @@ export const useThreadManager = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isPosting) return; // guard double submit
 
+    setIsPosting(true);
     const result = await handlePost(content, image);
 
     if (postThread.fulfilled.match(result)) {
       setContent("");
       setImage(null);
     }
+    setIsPosting(false);
   };
 
   return {
@@ -114,6 +118,7 @@ export const useThreadManager = () => {
     handleLike,
     handleLogout,
     handlePost,
+    isPosting,
     isLoggedIn: !!token,
   };
 };

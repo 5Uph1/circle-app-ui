@@ -27,6 +27,7 @@ interface ListThreadProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   threads: Thread[];
   handleLike: (id: number | string) => void;
+  isPosting: boolean;
 }
 
 export function ListThread({
@@ -39,6 +40,7 @@ export function ListThread({
   fileInputRef,
   threads,
   handleLike,
+  isPosting,
 }: ListThreadProps) {
   return (
     <main className="flex-1 border-x border-[#2f3336] min-h-screen">
@@ -88,11 +90,11 @@ export function ListThread({
                 onClick={() => fileInputRef.current?.click()}
               />
               <button
-                disabled={!content.trim()}
+                disabled={!content.trim() || isPosting}
                 className="bg-green-600 px-5 py-1.5 rounded-full font-bold text-sm cursor-pointer hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 type="submit"
               >
-                Post
+                {isPosting ? "Posting..." : "Post"}
               </button>
               {/* <button
                                 type="submit"
