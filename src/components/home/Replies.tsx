@@ -1,6 +1,7 @@
 import { useReplyManager } from "@/hooks/useReply";
 import { timeAgo } from "@/pages/Home";
 import { ArrowLeft, Heart, ImagePlus, MessageCircle, X } from "lucide-react";
+import { useState } from "react";
 
 const AVATAR_COLORS = [
   "#6366f1",
@@ -64,6 +65,31 @@ function SkeletonReply() {
   );
 }
 
+function ThreadImage({ src }: { src: string }) {
+  const [lightbox, setLightbox] = useState(false);
+
+  return (
+    <>
+      <img
+        src={src}
+        onClick={() => setLightbox(true)}
+        className="rounded-xl w-full object-contain max-h-80 mb-2 border border-[#2f3336] cursor-zoom-in bg-black/20"
+      />
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(false)}
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center cursor-zoom-out"
+        >
+          <img
+            src={src}
+            className="max-h-screen max-w-screen object-contain p-4"
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── Reply Card ───────────────────────────────────────────────────────────────
 function ReplyCard({ reply, index }: { reply: any; index: number }) {
   const avatarSrc = reply.user?.profile_picture ?? undefined;
@@ -91,13 +117,7 @@ function ReplyCard({ reply, index }: { reply: any; index: number }) {
           {reply.content}
         </p>
 
-        {reply.image && (
-          <img
-            src={reply.image}
-            alt="attachment"
-            className="rounded-xl max-h-72 object-cover w-full mb-2"
-          />
-        )}
+        {reply.image && <ThreadImage src={reply.image} />}
       </div>
     </div>
   );
@@ -241,19 +261,35 @@ export function Replies() {
 
         {/* ✅ Preview image yang dipilih */}
         {image && (
-          <div className="px-4 pb-3">
-            <div className="flex items-center gap-2 bg-[#2f3336] px-3 py-1.5 rounded-lg w-fit">
-              <span>🖼️</span>
-              <span className="text-sm text-[#e7e9ea]">{image.name}</span>
+          <div className="w-full mt-3">
+            {/* Desktop: tampilkan preview gambar */}
+            <div className="hidden md:block relative">
+              <img
+                src={URL.createObjectURL(image)}
+                className="rounded-xl max-h-60 object-cover border border-gray-700"
+              />
               <button
                 type="button"
                 onClick={() => {
                   setImage(null);
                   if (fileInputRef.current) fileInputRef.current.value = "";
                 }}
-                className="text-red-400 hover:text-red-600 ml-1"
+                className="absolute top-2 right-2 bg-black/60 rounded-full p-1 hover:bg-black/80"
               >
-                <X size={14} />
+                <X size={14} className="text-white" />
+              </button>
+            </div>
+
+            {/* Mobile: tetap nama file seperti sebelumnya */}
+            <div className="flex md:hidden items-center gap-2 bg-gray-800 px-3 py-1 rounded w-fit">
+              <span>🖼️</span>
+              <span className="text-sm text-gray-300">{image.name}</span>
+              <button
+                type="button"
+                onClick={() => setImage(null)}
+                className="text-red-400 font-bold ml-2 cursor-pointer hover:text-red-600"
+              >
+                ✕
               </button>
             </div>
           </div>
