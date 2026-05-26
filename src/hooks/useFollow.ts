@@ -8,6 +8,7 @@ import {
   unfollowUser,
   clearFollowError,
   type FollowUser,
+  fetchMyFollowers,
 } from "../store/followSlice";
 import { updateUser } from "@/store/authSlice";
 import { API_URL } from "@/config/api";
@@ -20,6 +21,7 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
   const {
     followers,
     following,
+    myFollowers,
     loadingFollowers,
     loadingFollowing,
     followingInProgress,
@@ -33,16 +35,19 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
     dispatch(fetchFollowing({ userId: currentUserId, token }));
   }, [dispatch, profileUserId, currentUserId, token]);
 
-  // useEffect 2 — socket listener
+  // useEffect 2 — fetch myFollowers
+  useEffect(() => {
+    if (!currentUserId || !token) return;
+    dispatch(fetchMyFollowers({ userId: currentUserId, token }));
+  }, [dispatch, currentUserId, token]);
+
+  // useEffect 3 — socket listener
   useEffect(() => {
     if (!token) return;
 
     const handleFollowUpdate = (data: any) => {
-      if (
-        data.followerId === currentUserId ||
-        data.followingId === currentUserId
-      ) {
-        dispatch(fetchFollowing({ userId: currentUserId, token }));
+      if (data.followingId === currentUserId) {
+        dispatch(fetchMyFollowers({ userId: currentUserId, token }));
         dispatch(fetchFollowers({ userId: profileUserId, token }));
       }
     };
@@ -54,6 +59,7 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
     };
   }, [currentUserId, profileUserId, token, dispatch]);
 
+  // ← isFollowing harus didefinisikan SEBELUM isFollowBack
   const isFollowing = useCallback(
     (targetUserId: number) => following.some((u) => u.id === targetUserId),
     [following],
@@ -64,12 +70,12 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
     [followingInProgress],
   );
 
-  // ✅ Follow Back: dia ada di followers kita, tapi kita belum follow balik
+  // ← pakai myFollowers, bukan followers
   const isFollowBack = useCallback(
     (targetUserId: number) =>
-      followers.some((u) => u.id === targetUserId) &&
+      myFollowers.some((u) => u.id === targetUserId) &&
       !isFollowing(targetUserId),
-    [followers, isFollowing],
+    [myFollowers, isFollowing],
   );
 
   const handleFollow = useCallback(
@@ -101,7 +107,6 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
         );
       }
 
-      // 🔥 fetch sekali setelah follow/unfollow selesai
       const meRes = await fetch(`${API_URL}/user/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -114,6 +119,7 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
       );
 
       dispatch(fetchFollowing({ userId: currentUserId, token }));
+      dispatch(fetchMyFollowers({ userId: currentUserId, token }));
 
       if (profileUserId !== currentUserId) {
         dispatch(fetchFollowers({ userId: profileUserId, token }));

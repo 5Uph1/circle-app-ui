@@ -17,6 +17,7 @@ export interface FollowUser {
 interface FollowState {
   followers: FollowUser[];
   following: FollowUser[];
+  myFollowers: FollowUser[];
   loadingFollowers: boolean;
   loadingFollowing: boolean;
   followingInProgress: number[];
@@ -26,6 +27,7 @@ interface FollowState {
 const initialState: FollowState = {
   followers: [],
   following: [],
+  myFollowers: [],
   loadingFollowers: false,
   loadingFollowing: false,
   followingInProgress: [],
@@ -66,6 +68,23 @@ export const fetchFollowing = createAsyncThunk(
       return rejectWithValue(
         err.response?.data?.message || "Failed to fetch following",
       );
+    }
+  },
+);
+
+export const fetchMyFollowers = createAsyncThunk(
+  "follow/fetchMyFollowers",
+  async (
+    { userId, token }: { userId: number; token: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await axios.get(`${API_URL}/follow/followers/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data as FollowUser[];
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || "Failed");
     }
   },
 );
@@ -165,6 +184,10 @@ const followSlice = createSlice({
         state.loadingFollowing = false;
         state.error = action.payload as string;
       });
+
+    builder.addCase(fetchMyFollowers.fulfilled, (state, action) => {
+      state.myFollowers = action.payload;
+    });
 
     // followUser
     builder
