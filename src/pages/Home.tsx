@@ -6,7 +6,7 @@ import Follows from "@/components/home/Follow";
 import { useThreadManager } from "@/hooks/useThread";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { House, Search, SquareUser, UserStar } from "lucide-react";
+import { House, LogOut, Search, SquareUser, UserStar } from "lucide-react";
 import { Route, Routes, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -94,15 +94,10 @@ export function Home() {
             ))}
           </nav>
           <button
-            onClick={() => navigate("/")}
-            className="bg-[#04a51e] py-2 rounded-full font-bold mt-4"
-          >
-            Create Post
-          </button>
-          <button
             className="mt-auto flex items-center gap-3 text-gray-400 cursor-pointer"
             onClick={handleLogout}
           >
+            <LogOut />
             Logout
           </button>
         </aside>
@@ -287,9 +282,9 @@ export function Home() {
           ))}
           <button
             onClick={handleLogout}
-            className="flex flex-col items-center gap-1 text-xs text-gray-500"
+            className="flex flex-col items-center gap-1 text-xs text-gray-500 cursor-pointer"
           >
-            <SquareUser />
+            <LogOut />
             <span>Logout</span>
           </button>
         </nav>
