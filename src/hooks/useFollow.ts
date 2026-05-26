@@ -108,8 +108,8 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
       const meData = await meRes.json();
       dispatch(
         updateUser({
-          following: meData.data._count.following,
-          follower: meData.data._count.follower,
+          following: meData.data._count.follower,
+          follower: meData.data._count.following,
         }),
       );
 
@@ -135,7 +135,7 @@ export const useFollow = (currentUserId: number, profileUserId: number) => {
     clearError,
     isFollowing,
     isInProgress,
-    isFollowBack, // ✅ baru
+    isFollowBack,
     handleFollow,
   };
 };

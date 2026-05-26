@@ -15,6 +15,7 @@ import { getSuggestedUsers } from "@/store/userSlice";
 import { DialogDemo } from "@/components/part/dialogProfile";
 import { useUpdateManager } from "@/hooks/useAuth";
 import { useFollow } from "@/hooks/useFollow";
+import { FollowModal } from "@/components/part/FollowModal";
 
 export function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -46,6 +47,9 @@ export function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [lightboxPhoto, setLightboxPhoto] = useState(false);
+  const [followModal, setFollowModal] = useState<
+    "followers" | "following" | null
+  >(null);
 
   const user = useSelector((state: RootState) => state.auth.user);
   const suggested = useSelector(
@@ -189,12 +193,18 @@ export function Home() {
                 {user?.bio || "no bio yet"}
               </p>
               <div className="flex gap-4 mt-2 text-sm">
-                <span>
-                  <b className="text-white">{user?.follower ?? 0}</b>{" "}
+                <span
+                  onClick={() => setFollowModal("following")}
+                  className="cursor-pointer"
+                >
+                  <b className="text-white">{user?.following ?? 0}</b>{" "}
                   <span className="text-gray-500">Following</span>
                 </span>
-                <span>
-                  <b className="text-white">{user?.following ?? 0}</b>{" "}
+                <span
+                  onClick={() => setFollowModal("followers")}
+                  className="cursor-pointer"
+                >
+                  <b className="text-white">{user?.follower ?? 0}</b>{" "}
                   <span className="text-gray-500">Followers</span>
                 </span>
               </div>
@@ -284,6 +294,13 @@ export function Home() {
           </button>
         </nav>
       </div>
+      {followModal && (
+        <FollowModal
+          type={followModal}
+          profileUserId={user?.id ?? 0}
+          onClose={() => setFollowModal(null)}
+        />
+      )}
     </div>
   );
 }

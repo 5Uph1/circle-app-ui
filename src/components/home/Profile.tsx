@@ -6,6 +6,7 @@ import { useUpdateManager } from "@/hooks/useAuth";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { useFollow } from "@/hooks/useFollow";
+import { FollowModal } from "@/components/part/FollowModal";
 
 export function ProfileContent() {
   const { profileUser, threads, loading, isOwnProfile, handleLike } =
@@ -14,6 +15,9 @@ export function ProfileContent() {
 
   const [lightboxPhoto, setLightboxPhoto] = useState(false);
   const [lightbox, setLightbox] = useState(false);
+  const [followModal, setFollowModal] = useState<
+    "followers" | "following" | null
+  >(null);
 
   // 🔥 ambil user login dari redux
   const { user } = useSelector((state: RootState) => state.auth);
@@ -143,19 +147,25 @@ export function ProfileContent() {
         </p>
 
         <div className="flex gap-4 mt-2 text-sm text-gray-400">
-          <span>
+          <span
+            onClick={() => setFollowModal("following")}
+            className="cursor-pointer"
+          >
             <b className="text-white">
               {isOwnProfile
                 ? user?.following
-                : (profileUser?._count?.following ?? 0)}
+                : (profileUser?._count?.follower ?? 0)}
             </b>{" "}
             Following
           </span>
-          <span>
+          <span
+            onClick={() => setFollowModal("followers")}
+            className="cursor-pointer"
+          >
             <b className="text-white">
               {isOwnProfile
                 ? user?.follower
-                : (profileUser?._count?.follower ?? 0)}
+                : (profileUser?._count?.following ?? 0)}
             </b>{" "}
             Followers
           </span>
@@ -225,6 +235,13 @@ export function ProfileContent() {
           ))
         )}
       </div>
+      {followModal && (
+        <FollowModal
+          type={followModal}
+          profileUserId={displayUser?.id ?? 0}
+          onClose={() => setFollowModal(null)}
+        />
+      )}
     </main>
   );
 }
