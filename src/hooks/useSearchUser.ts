@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  searchUsers,
-} from "@/store/userSlice";
+import { clearSearch, searchUsers } from "@/store/userSlice";
 
 export const useSearchUser = () => {
   const dispatch = useDispatch<any>();
@@ -11,7 +9,10 @@ export const useSearchUser = () => {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    if (!query) return;
+    if (!query) {
+      dispatch(clearSearch());
+      return;
+    }
 
     const delay = setTimeout(() => {
       dispatch(searchUsers(query));

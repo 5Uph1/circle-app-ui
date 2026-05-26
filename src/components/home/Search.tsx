@@ -19,7 +19,7 @@ export function SearchUser() {
   }
 
   return (
-    <main className="flex-1 border-x border-[#2f3336] min-h-screen">
+    <main className="flex-1 border-x border-[#2f3336] lg:min-h-screen">
       <div className="p-4 border-b border-gray-800">
         <input
           type="text"
@@ -33,7 +33,13 @@ export function SearchUser() {
       {loading && <p className="text-gray-400 p-4 text-center">Loading...</p>}
 
       <div className="flex flex-col">
-        {users.length === 0 && !loading ? (
+        {!query ? (
+          <p className="text-gray-500 p-4 text-center">
+            Cari username atau nama...
+          </p>
+        ) : loading ? (
+          <p className="text-gray-400 p-4 text-center">Loading...</p>
+        ) : users.length === 0 ? (
           <p className="text-gray-500 p-4 text-center">User tidak ditemukan</p>
         ) : (
           users.map((user: any) => {
