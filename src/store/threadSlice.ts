@@ -1,6 +1,6 @@
 import { API_URL } from "@/config/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { axiosInstance as axios } from "@/lib/axios";
 
 interface Thread {
   id: number;

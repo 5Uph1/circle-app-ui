@@ -4,7 +4,7 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+import { axiosInstance as axios } from "@/lib/axios";
 
 // ─── INTERFACE ─────────────────────────────
 interface User {
