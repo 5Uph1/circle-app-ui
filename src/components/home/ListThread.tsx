@@ -96,12 +96,6 @@ export function ListThread({
               >
                 {isPosting ? "Posting..." : "Post"}
               </button>
-              {/* <button
-                                type="submit"
-                                disabled={!content.trim()}
-                                className="bg-[#16a34a] text-white rounded-full px-4 py-1.5 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
-                            >
-                            </button> */}
             </div>
           </div>
 
