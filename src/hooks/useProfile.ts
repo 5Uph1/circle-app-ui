@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/store";
 import { toggleLikeAsync } from "@/store/threadSlice";
 import { API_URL } from "@/config/api";
+import { socket } from "@/lib/socket";
+import { updateUser } from "@/store/authSlice";
 
 interface ProfileUser {
   id: number;
@@ -47,55 +49,111 @@ export const useProfile = () => {
 
   const targetId = id ?? currentUserId;
   const isOwnProfile = !id || Number(id) === currentUserId;
+  const fetchProfile = async () => {
+    if (!token || !targetId) return;
+    setLoading(true);
+
+    try {
+      let userData;
+      let threadData;
+
+      // ✅ PROFILE SENDIRI
+      if (targetId === currentUserId) {
+        userData = { data: user };
+
+        const threadRes = await fetch(`${API_URL}/thread/user/${targetId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        threadData = await threadRes.json();
+      }
+      // ✅ PROFILE ORANG LAIN
+      else {
+        const [userRes, threadRes] = await Promise.all([
+          fetch(`${API_URL}/user/profile/${targetId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_URL}/thread/user/${targetId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        userData = await userRes.json();
+        threadData = await threadRes.json();
+      }
+
+      setProfileUser(userData.data);
+      setThreads(threadData.data?.threads ?? []);
+    } catch (err) {
+      console.error("Gagal fetch profile:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [targetId, token]);
 
   useEffect(() => {
     if (!token || !targetId) return;
 
-    const fetchProfile = async () => {
-      setLoading(true);
+    const handleFollowUpdate = (data: any) => {
+      const targetIdNum = Number(targetId);
 
-      try {
-        let userData;
-        let threadData;
+      if (data.followingId === targetIdNum) {
+        setProfileUser((prev) => {
+          if (!prev) return prev;
+          const delta = data.action === "follow" ? 1 : -1;
+          return {
+            ...prev,
+            _count: {
+              ...prev._count,
+              following: prev._count.following + delta,
+            },
+          };
+        });
 
-        // ✅ PROFILE SENDIRI
-        if (targetId === currentUserId) {
-          userData = { data: user };
-
-          const threadRes = await fetch(`${API_URL}/thread/user/${targetId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          threadData = await threadRes.json();
-        }
-        // ✅ PROFILE ORANG LAIN
-        else {
-          const [userRes, threadRes] = await Promise.all([
-            fetch(`${API_URL}/user/profile/${targetId}`, {
-              headers: { Authorization: `Bearer ${token}` },
+        if (isOwnProfile) {
+          dispatch(
+            updateUser({
+              follower:
+                (user?.follower ?? 0) + (data.action === "follow" ? 1 : -1),
             }),
-            fetch(`${API_URL}/thread/user/${targetId}`, {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-          ]);
-
-          userData = await userRes.json();
-          threadData = await threadRes.json();
+          );
         }
+      }
 
-        setProfileUser(userData.data);
-        setThreads(threadData.data?.threads ?? []);
-      } catch (err) {
-        console.error("Gagal fetch profile:", err);
-      } finally {
-        setLoading(false);
+      if (data.followerId === targetIdNum) {
+        setProfileUser((prev) => {
+          if (!prev) return prev;
+          const delta = data.action === "follow" ? 1 : -1;
+          return {
+            ...prev,
+            _count: { ...prev._count, follower: prev._count.follower + delta },
+          };
+        });
+
+        // ← tambah ini untuk own profile
+        if (isOwnProfile) {
+          dispatch(
+            updateUser({
+              following:
+                (user?.following ?? 0) + (data.action === "follow" ? 1 : -1),
+            }),
+          );
+        }
       }
     };
 
-    fetchProfile();
-  }, [targetId, token]);
+    socket.on("follow-updated", handleFollowUpdate);
 
-  // ✅ handleLike khusus untuk thread di halaman profile
+    return () => {
+      socket.off("follow-updated", handleFollowUpdate);
+    };
+  }, [token, targetId]);
+
+  // handleLike khusus untuk thread di halaman profile
   // Update state lokal, bukan Redux store (karena ini bukan feed utama)
   const handleLike = (id: number) => {
     if (!token) return;
