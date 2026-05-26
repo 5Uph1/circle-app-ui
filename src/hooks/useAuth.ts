@@ -89,10 +89,7 @@ export const useRegisterManager = () => {
     e.preventDefault();
 
     try {
-      console.log(form);
       const response = await axios.post(`${API_URL}/user/register`, form);
-
-      console.log(response.data);
 
       alert("Register berhasil!");
       navigate("/login");

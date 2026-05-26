@@ -12,20 +12,14 @@ export function ProfileContent() {
     useProfile();
   const { handleUpdate } = useUpdateManager();
 
+  const [lightboxPhoto, setLightboxPhoto] = useState(false);
+
   // 🔥 ambil user login dari redux
   const { user } = useSelector((state: RootState) => state.auth);
 
   // 🔥 tentukan user yang ditampilkan
   const displayUser = isOwnProfile ? user : profileUser;
 
-  console.log("========================================== masuk");
-  console.log(displayUser);
-  // if(!displayUser)
-  // {
-  //     throw new Error ("Terjadi error")
-  // }
-
-  // 🔥 state tab
   const [activeTab, setActiveTab] = useState<"all" | "media">("all");
 
   // 🔥 filter thread
@@ -60,14 +54,28 @@ export function ProfileContent() {
         <div className="absolute -bottom-12 left-4">
           <div className="w-20 h-20 rounded-full border-4 border-black bg-yellow-500 overflow-hidden">
             {displayUser?.photo_profile && (
-              <img
-                src={
-                  isOwnProfile
-                    ? (user?.photo_profile ?? "")
-                    : (profileUser?.photo_profile ?? "")
-                }
-                className="w-full h-full object-cover"
-              />
+              <>
+                <img
+                  src={
+                    isOwnProfile
+                      ? (user?.photo_profile ?? "")
+                      : (profileUser?.photo_profile ?? "")
+                  }
+                  onClick={() => setLightboxPhoto(true)}
+                  className="w-full h-full object-cover cursor-pointer"
+                />
+                {lightboxPhoto && (
+                  <div
+                    onClick={() => setLightboxPhoto(false)}
+                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center cursor-zoom-out"
+                  >
+                    <img
+                      src={displayUser?.photo_profile}
+                      className="max-h-screen max-w-screen object-contain p-4"
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

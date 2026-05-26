@@ -44,13 +44,11 @@ export const useThreadManager = () => {
     };
 
     const handleNewThread = (data: any) => {
-      console.log("Realtime thread:", data);
       dispatch(addThread(data));
     };
 
     // ✅ FIX: handler khusus like
     const handleLikeUpdate = (data: any) => {
-      console.log("Realtime like:", data);
       dispatch(updateLikeRealtime(data));
     };
 
