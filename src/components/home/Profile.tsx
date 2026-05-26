@@ -13,6 +13,7 @@ export function ProfileContent() {
   const { handleUpdate } = useUpdateManager();
 
   const [lightboxPhoto, setLightboxPhoto] = useState(false);
+  const [lightbox, setLightbox] = useState(false);
 
   // 🔥 ambil user login dari redux
   const { user } = useSelector((state: RootState) => state.auth);
@@ -196,11 +197,25 @@ export function ProfileContent() {
           // 🔥 GRID MEDIA
           <div className="grid grid-cols-3 gap-1 p-1">
             {filteredThreads.map((t) => (
-              <img
-                key={t.id}
-                src={t.image}
-                className="w-full h-32 object-cover"
-              />
+              <>
+                <img
+                  key={t.id}
+                  src={t.image}
+                  onClick={() => setLightbox(true)}
+                  className="w-full h-32 object-cover cursor-pointer"
+                />
+                {lightbox && (
+                  <div
+                    onClick={() => setLightbox(false)}
+                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center cursor-zoom-out"
+                  >
+                    <img
+                      src={t.image}
+                      className="max-h-screen max-w-screen object-contain p-4"
+                    />
+                  </div>
+                )}
+              </>
             ))}
           </div>
         ) : (
