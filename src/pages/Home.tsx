@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { House, Search, SquareUser, UserStar } from "lucide-react";
 import { Route, Routes, NavLink, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/store";
 import { getSuggestedUsers } from "@/store/userSlice";
@@ -45,6 +45,7 @@ export function Home() {
   const { handleUpdate } = useUpdateManager();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [lightboxPhoto, setLightboxPhoto] = useState(false);
 
   const user = useSelector((state: RootState) => state.auth.user);
   const suggested = useSelector(
@@ -150,10 +151,24 @@ export function Home() {
               <div className="h-16 bg-gradient-to-r from-green-200 to-blue-300 rounded-lg" />
               <div className="w-16 h-16 rounded-full border-4 border-[#262626] absolute -bottom-12 left-1 bg-yellow-500 overflow-hidden">
                 {user?.photo_profile && (
-                  <img
-                    src={user.photo_profile}
-                    className="w-full h-full object-cover"
-                  />
+                  <>
+                    <img
+                      src={user.photo_profile}
+                      onClick={() => setLightboxPhoto(true)}
+                      className="w-full h-full object-cover cursor-pointer"
+                    />
+                    {lightboxPhoto && (
+                      <div
+                        onClick={() => setLightboxPhoto(false)}
+                        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center cursor-zoom-out"
+                      >
+                        <img
+                          src={user?.photo_profile}
+                          className="max-h-screen max-w-screen object-contain p-4"
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
               <div className="absolute -bottom-10 right-0">
